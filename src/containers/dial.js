@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TouchableOpacity, Image, BackHandler } from 'react-native';
 
 class Dial extends Component {
   constructor(props) {
@@ -9,6 +9,14 @@ class Dial extends Component {
     };
   }
 
+  componentDidMount() {
+    this.handler = BackHandler.addEventListener('hardwareBackPress', () => { return BackHandler.exitApp() })
+  }
+
+  componentWillUnmount() {
+    BackHandler.addEventListener('hardwareBackPress', () => { return BackHandler.exitApp() })
+  }
+  
   render() {
     console.log(this.state.phone)
     return (
@@ -123,13 +131,13 @@ class Dial extends Component {
           }} style={{ height: 100, width: "33.3333333333%", alignItems: "center", justifyContent: "center", backgroundColor: "#495565", borderWidth: 2, borderColor: "#068BFB" }}>
             <Text style={{ fontSize: 50, fontWeight: "bold", color: "white" }}>#</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{ height: 100, width: "33.3333333333%", alignItems: "center", justifyContent: "center", backgroundColor: "#495565", borderWidth: 2, borderColor: "#068BFB" }}>
+          <TouchableOpacity onPress={() => this.props.navigation.navigate("Contact")} style={{ height: 100, width: "33.3333333333%", alignItems: "center", justifyContent: "center", backgroundColor: "#495565", borderWidth: 2, borderColor: "#068BFB" }}>
             <Image
               source={{ uri: "https://i.ibb.co/n8H1rxL/user-1.png" }}
               style={{ height: 50, width: 50 }}
             />
           </TouchableOpacity>
-          <TouchableOpacity style={{ height: 100, width: "33.3333333333%", alignItems: "center", justifyContent: "center", backgroundColor: "#495565", borderWidth: 2, borderColor: "#068BFB", backgroundColor: "yellowgreen" }}>
+          <TouchableOpacity onPress={() => this.props.navigation.navigate("Calling")} style={{ height: 100, width: "33.3333333333%", alignItems: "center", justifyContent: "center", backgroundColor: "#495565", borderWidth: 2, borderColor: "#068BFB", backgroundColor: "yellowgreen" }}>
             <Text style={{ fontSize: 50, fontWeight: "bold", color: "white" }}>Call</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => {

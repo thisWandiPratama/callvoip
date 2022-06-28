@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, TextInput, Image, ScrollView, Modal } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, Image, ScrollView, Modal,BackHandler } from 'react-native';
 
 class Contact extends Component {
   constructor(props) {
@@ -7,7 +7,18 @@ class Contact extends Component {
     this.state = {
       contact: [
         {
-          name: "teknsi ainn PKU",
+          id: 1,
+          name: "Teknisi Ainn PKU",
+          phone: "0834934"
+        },
+        {
+          id: 2,
+          name: "Teknisi Ainn PKU",
+          phone: "0834934"
+        },
+        {
+          id: 3,
+          name: "Teknisi Aan PKU",
           phone: "0834934"
         }
       ],
@@ -15,17 +26,44 @@ class Contact extends Component {
       nama: "",
       phone1: ""
     };
+    this.arrayholder = this.state.contact;
   }
+
+  searchFilterFunction = text => {
+    const newData = this.arrayholder.filter(item => {
+      const itemData = `${item.name.toUpperCase()}`;
+      const textData = text.toUpperCase();
+
+      return itemData.indexOf(textData) > -1;
+    });
+    console.log(newData)
+    this.setState({ contact: newData });
+  };
+
+  componentDidMount() {
+    this.handler = BackHandler.addEventListener('hardwareBackPress', () => { return BackHandler.exitApp() })
+  }
+
+  componentWillUnmount() {
+    BackHandler.addEventListener('hardwareBackPress', () => { return BackHandler.exitApp() })
+  }
+  
 
 
   contact = () => {
     return this.state.contact.map((value, index) => {
       return (
-        <TouchableOpacity style={{ height: 50, width: "100%", flexDirection: "row", justifyContent: "space-between", backgroundColor: "#aeaeae", alignItems: "center", borderRadius: 10, marginTop: 10 }}>
-          <Text style={{ fontSize: 20, fontWeight: "bold", color: "#000", marginLeft: 5 }}>{value.name}</Text>
+        <TouchableOpacity
+          onLongPress={() => {
+            this.setState({
+              contact: this.state.contact.filter(obj => obj.id !== value.id)
+            })
+          }}
+          key={index} style={{ borderRadius: 5, height: 70, width: "100%", flexDirection: "row", alignItems: "center", justifyContent: "space-between", backgroundColor: "#495565", borderWidth: 2, borderColor: "#068BFB", marginBottom: 5 }}>
+          <Text style={{ fontSize: 12, fontWeight: "bold", color: "white", marginLeft: 5 }}>{value.name}</Text>
           <Image
             source={{ uri: "https://i.ibb.co/9bY1nsq/phone.png" }}
-            style={{ height: 35, width: 35 }}
+            style={{ height: 40, width: 40, marginRight: 5 }}
           />
         </TouchableOpacity>
       )
@@ -36,11 +74,16 @@ class Contact extends Component {
     return (
       <View style={{ flex: 1 }}>
         <View style={{ height: 50, backgroundColor: "#aeaeae", alignItems: "center" }}>
-          <TextInput
-            placeholder="search contact"
-          />
+          <View style={{
+            marginTop: 5,
+          }}>
+            <TextInput
+              placeholder="Search Contact"
+              onChangeText={text => this.searchFilterFunction(text)}
+            />
+          </View>
         </View>
-        <View style={{ margin: 20 }}>
+        <View style={{ margin: 10 }}>
           <ScrollView>
             {this.contact()}
           </ScrollView>
